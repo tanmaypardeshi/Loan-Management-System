@@ -1,0 +1,35 @@
+version: "3.7"
+
+x-service-volumes: &service-volumes
+  - ./backend:/app/backend/:rw,cached
+
+x-database-variables: &database-variables
+  POSTGRES_DB: postgres
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+
+x-app-variables: &app-variables
+  <<: *database-variables
+  POSTGRES_HOST: postgres
+
+services:
+  apis:
+    image: backend:latest
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes: *service-volumes
+    environment: *app-variables
+    depends_on:
+      - postgres
+    ports:
+      - "8000:8000"
+
+  postgres:
+    image: postgres
+    environment: : *database-variables
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data: /var/lib/postgresql/data
+    
+volumes:
+  - db-data:
