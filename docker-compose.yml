@@ -25,11 +25,11 @@ services:
 
   postgres:
     image: postgres
-    environment: : *database-variables
+    environment: *database-variables
     ports:
       - "5432:5432"
     volumes:
-      - db-data: /var/lib/postgresql/data
-    
+      - db-data:/var/lib/postgresql/data
+
 volumes:
-  - db-data:
+  db-data:
