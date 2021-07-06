@@ -1,4 +1,3 @@
-import random
 import datetime
 from rest_framework import status
 from rest_framework.response import Response
@@ -6,9 +5,10 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework_jwt.settings import api_settings
+from rest_framework.exceptions import ValidationError
 
-from .permissions import (IsAdmin, IsAgent, IsCustomer )
-from .models import (User,)
+from .permissions import (IsAdmin, IsAgent, IsCustomer)
+from .models import (User, )
 from .serializers import (UserSerializer, LoginSerializer, )
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
@@ -20,7 +20,12 @@ class UserView(APIView):
 
     def post(self, request):
         user_serializer = UserSerializer(data=request.data)
-        user_serializer.is_valid(raise_exception=True)
+        if not user_serializer.is_valid():
+            response = {
+                'success': False,
+                'messge': 'This account already exists',
+            }
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
         user_serializer.save()
         user = User.objects.get(email=request.data['email'])
         payload = jwt_payload_handler(user)
@@ -29,9 +34,7 @@ class UserView(APIView):
         response = {
             'success': True,
             'message': 'User registered successfully',
-            'token': token,
-            'is_manager': user.is_manager,
-            'is_rnd': user.is_rnd
+            'token': token
         }
         return Response(response, status=status.HTTP_201_CREATED)
 
@@ -42,7 +45,8 @@ class LoginView(APIView):
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
+        try:
+            serializer.is_valid(raise_exception=True)
             response = {
                 'success': True,
                 'message': 'User logged in successfully',
@@ -52,11 +56,12 @@ class LoginView(APIView):
                 'is_admin': serializer.data['is_admin']
             }
             return Response(response, status=status.HTTP_200_OK)
-        response = {
-            'success': False,
-            'message': 'Invalid Credentials',
-        }
-        return Response(response, status=status.HTTP_401_UNAUTHORIZED)
+        except ValidationError as e:
+            response = {
+                'success': False,
+                'message': f'Internal Server Error. Error : {e.__dict__["detail"]["non_field_errors"][0]}'
+            }
+            return Response(response, status=status.HTTP_401_UNAUTHORIZED)
 
 
 class ProfileView(APIView):
@@ -70,10 +75,8 @@ class ProfileView(APIView):
             date_joined = str(user.date_joined + datetime.timedelta(hours=5.5))
             last_login = f"{last_login[:10]} {last_login[11:19]}"
             date_joined = f"{date_joined[:10]} {date_joined[11:19]}"
-            status_code = status.HTTP_200_OK
             response = {
                 'success': True,
-                'status_code': status.HTTP_200_OK,
                 'message': 'Profile fetched',
                 'email': user.email,
                 'first_name': user.first_name,
@@ -84,13 +87,11 @@ class ProfileView(APIView):
                 'last_login': last_login,
                 'date_joined': date_joined
             }
+            return Response(response, status=status.HTTP_200_OK)
         except Exception as e:
-            status_code = status.HTTP_400_BAD_REQUEST
             response = {
                 'success': False,
-                'status code': status.HTTP_400_BAD_REQUEST,
                 'message': 'User does not exists',
                 'error': str(e)
             }
-        return Response(response, status=status_code)
-
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)

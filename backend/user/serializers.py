@@ -22,7 +22,7 @@ class UserSerializer(ModelSerializer):
         user.last_name = validated_data['last_name']
         user.is_customer = validated_data['is_customer']
         user.is_agent = validated_data['is_agent']
-        user.is_admin = validated_data['is_admin']
+        user.is_admin = False
         if user.is_agent:
             user.is_approved = False
         else:
@@ -46,6 +46,10 @@ class LoginSerializer(Serializer):
         if user is None:
             raise serializers.ValidationError(
                 'Invalid Credentials'
+            )
+        if not user.is_approved:
+            raise serializers.ValidationError(
+                'Agent login is not approved by admin'
             )
         payload = jwt_payload_handler(user)
         token = jwt_encode_handler(payload)

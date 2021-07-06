@@ -16,7 +16,7 @@ class CustomUserAdmin(BaseUserAdmin):
     fieldsets = (
         ('Login Info', {'fields': ('email', 'password')}),
         ('Primary Info', {'fields': ('first_name', 'last_name')}),
-        ('Permissions', {'fields': ('is_staff', 'is_active', 'is_admin', 'is_customer', 'is_agent')}),
+        ('Permissions', {'fields': ('is_staff', 'is_active', 'is_admin', 'is_customer', 'is_agent', 'is_approved')}),
         ('Time', {'fields': ('date_joined', 'last_login',)}),
     )
     add_fieldsets = (
