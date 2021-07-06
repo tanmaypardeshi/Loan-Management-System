@@ -12,7 +12,7 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework_jwt.settings import api_settings
 from rest_framework.exceptions import ValidationError
 
-from .permissions import IsAdmin, IsAgent, IsCustomer
+from .permissions import IsAdmin, IsAgent
 from .models import User
 from .serializers import UserSerializer, LoginSerializer, ListUserSerializer, CreateAdminSerializer, \
     ApproveAgentSerializer
@@ -86,7 +86,7 @@ class LoginView(APIView):
                 'success': False,
                 'message': f'Internal Server Error. Error : {e.__dict__["detail"]["non_field_errors"][0]}'
             }
-            return Response(response, status=status.HTTP_401_UNAUTHORIZED)
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ProfileView(APIView):
@@ -168,7 +168,7 @@ class ApproveDeleteAgentView(APIView):
         except User.DoesNotExist:
             raise Http404
 
-    def put(self, request, pk, format=None):
+    def put(self, request, pk):
         instance = self.get_object(pk)
         serializer = ApproveAgentSerializer(instance, data=request.data)
         if serializer.is_valid():
@@ -184,7 +184,7 @@ class ApproveDeleteAgentView(APIView):
         }
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk, format=None):
+    def delete(self, request, pk):
         instance = self.get_object(pk)
         try:
             instance.delete()
