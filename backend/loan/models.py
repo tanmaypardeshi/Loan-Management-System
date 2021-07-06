@@ -1,6 +1,7 @@
 from django.db import models
-from django.utils import timezone
 from django.core.exceptions import ValidationError
+
+from simple_history.models import HistoricalRecords
 
 from user.models import User
 
@@ -21,6 +22,10 @@ class Loan(models.Model):
     status = models.CharField(max_length=12, default="NEW")
     start_date = models.DateTimeField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)
+    modified_date = models.DateTimeField(auto_now=True)
+    history = HistoricalRecords()
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name} - {self.principal}"
+
+

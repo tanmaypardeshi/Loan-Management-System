@@ -12,7 +12,7 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework_jwt.settings import api_settings
 from rest_framework.exceptions import ValidationError
 
-from .permissions import IsAdmin, IsAgent
+from .permissions import IsAdmin, IsAgent, IsAdminOrAgent
 from .models import User
 from .serializers import UserSerializer, LoginSerializer, ListUserSerializer, CreateAdminSerializer, \
     ApproveAgentSerializer
@@ -123,7 +123,7 @@ class ProfileView(APIView):
 
 
 class ListAgentUserView(generics.ListAPIView):
-    permission_classes = (IsAuthenticated, IsAgent, IsAdmin,)
+    permission_classes = (IsAuthenticated, IsAdminOrAgent,)
     authentication_classes = (JSONWebTokenAuthentication,)
     serializer_class = ListUserSerializer
     queryset = User.objects.filter(is_customer=True)
