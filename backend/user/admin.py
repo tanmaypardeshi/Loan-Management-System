@@ -11,8 +11,8 @@ class CustomUserAdmin(BaseUserAdmin):
     add_form = UserCreationForm
     readonly_fields = ('date_joined', 'last_login',)
 
-    list_display = ('email', 'first_name', 'last_name', 'is_admin', 'is_customer', 'is_agent')
-    list_filter = ('email', 'is_admin', 'is_customer', 'is_agent')
+    list_display = ('email', 'first_name', 'last_name', 'is_admin', 'is_customer', 'is_agent', 'is_approved')
+    list_filter = ('is_admin', 'is_customer', 'is_agent', 'is_approved')
     fieldsets = (
         ('Login Info', {'fields': ('email', 'password')}),
         ('Primary Info', {'fields': ('first_name', 'last_name')}),
