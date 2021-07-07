@@ -2,6 +2,8 @@
 
 ### API endpoints to a minimal loan management system.
 
+#### NOTE : Please check these [Publised API Docs](https://documenter.getpostman.com/view/9835426/Tzm5FwLV) to get examples and information of all test cases of the API endpoints.
+
 ### Technologies used:
 1. Django
 2. Django REST framework
