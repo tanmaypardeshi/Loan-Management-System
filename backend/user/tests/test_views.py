@@ -207,7 +207,7 @@ class ListApprovalsTestViews(ListApprovalsTestSetup):
 class ApprovalDeleteTestViews(ApproveDeleteTestSetup):
 
     # Authenticated request by admin role to approve an agent
-    def test_admin_authenticated_delete(self):
+    def test_admin_authenticated_approve(self):
         payload = jwt_payload_handler(self.admin)
         token = jwt_encode_handler(payload)
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {token}")

@@ -37,7 +37,7 @@ def calculate_emi(principal, months, rate):
     return principal * rate_per_month * (numerator / denominator)
 
 
-class CustomerRequestLoanView(APIView):
+class AgentRequestLoanView(APIView):
     permission_classes = (IsAuthenticated, IsAgent,)
     authentication_classes = (JSONWebTokenAuthentication,)
 

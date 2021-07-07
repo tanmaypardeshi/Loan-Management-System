@@ -8,7 +8,7 @@ class IsCustomer(permissions.BasePermission):
 
 class IsAgent(permissions.BasePermission):
     def has_permission(self, request, view):
-        return request.user.is_agent
+        return request.user.is_agent and request.user.is_approved
 
 
 class IsAdmin(permissions.BasePermission):

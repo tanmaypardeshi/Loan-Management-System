@@ -131,7 +131,7 @@ class ListAgentTestSetup(APITestCase):
                                                  is_agent=customer_data['is_agent'])
         self.agent = User.objects.create_user(email=agent_data['email'], password=agent_data['password'],
                                               is_customer=agent_data['is_customer'],
-                                              is_agent=agent_data['is_agent'])
+                                              is_agent=agent_data['is_agent'], is_approved=True)
         return super().setUp()
 
     def tearDown(self):
