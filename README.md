@@ -58,44 +58,83 @@ docker-compose run --rm apis python manage.py test
 docker-compose run --rm apis python manage.py createsuperuser
 ```
 
-#### Description and Test cases of API endpoints:
+#### Description of API endpoints:
 
-* Base URL : http:127.0.0.1:8000/api
-* User APIs:
-    1. Signup: /user/signup/
+#### NOTE: Please check Postman Published Docs link given above to see examples of all API endpoints.
+
+* **Base URL : http:127.0.0.1:8000/api**
+* **User APIs:**
+    1. **Signup: /user/signup/**
         1. This endpoint can be used to sign up a user(customer or agent).
         2. Cannot signup if user already exists.
         3. Tokens have a validity of 2 hours only after which re-login is required.
         4. A user token is generated on successful registration.
-        5. POST request has to be sent to this endpoint. 
-    2. Create Admin: /user/create-admin/
+        5. POST request has to be sent to this endpoint.
+    2. **Create Admin: /user/create-admin/**
         1. This endpoint can be used by ADMINS ONLY to make more admin users.
         2. Authorization of admin level required to access this endpoint.
         3. POST request has to be sent to this endpoint.
-    3. Login : /user/login/
+    3. **Login : /user/login/**
         1. This endpoint can be used to log in by admin, agent or customer.
         2. Cannot log in agent if it is not approved by the admin.
         3. Admin and Customer can login using correct credentials directly.
         4. A user token is generated on successful login.
         5. Tokens have a validity of 2 hours only after which re-login is required.
         6. POST request has to be sent to this endpoint.
-    4. Profile : /user/profile/
+    4. **Profile : /user/profile/**
         1. This endpoint can display the user information depending on the authorization token present in the header.
         2. Authorization is required to access this endpoint.
         3. GET request has to be sent to this endpoint.
-    5. List Users(Agent) : /user/list-agent/
+    5. **List Users(Agent) : /user/list-agent/**
         1. This endpoint can be used by AGENTS OR ADMINS to list the customers present in the system.
         2. Customer role cannot access this endpoint.
         3. Authorization required to access this endpoint.
         4. GET request has to be sent to this endpoint.
-    6. List Users(Admin) : /user/list-approvals/
+    6. **List Users(Admin) : /user/list-approvals/**
         1. This endpoint can be used by ADMINS only to list the customers and agents present in the system.
         2. Customer and Agent role cannot access this endpoint.
         3. Authorization required to access this endpoint.
         4. GET request has to be sent to this endpoint.
-    7. Approve or Delete and Agent : /user/approve-delete/<int:pk>/
+    7. **Approve or Delete and Agent : /user/approve-delete/<int:pk>/**
         1. This endpoint can be used by ADMINS only to list approve an agent to the system or delete one.
         2. Customer and Agent role cannot access this endpoint.
         3. Authorization required to access this endpoint.
-        4. PUT request with agent id as a URL parameter can be used to approve an agent.
-        5. DELETE request with agent id as a URL parameter can be used to delete an agent.
+        4. PUT request with <int:pk> i.e. agent ID as a URL parameter with is_approved status can be used to approve or reject an agent.
+        5. DELETE request with <int:pk> i.e. agent ID as a URL parameter can be used to delete an agent.
+* **Loan APIs:**
+    1. **Request Loan by Agent for Customer : /loan/customer-loan/**
+        1. This endpoint is for the agent to request a loan to the admin on behalf of a customer.
+        2. Only Agent role can access this endpoint.
+        3. Authorization required to access this endpoint.
+        4. POST request has to be sent to this endpoint.
+    2. **Approve or Reject a loan by admin : /loan/approve-reject-loan/<int:pk>/**
+        1. This endpoint is for the ADMIN users only to accept or reject a loan request.
+        2. Customer and Agent role cannot access this endpoint.
+        3. Authorization required to access this endpoint.
+        4. PUT request with <int:pk> i.e. loan ID as a URL parameter and status in the body can be used to approve or reject a loan.
+    3. **Edit Loan by agent : /loan/edit-loan/<int:pk>/**
+        1. This endpoint is for the AGENT role only to edit loan details for a user.
+        2. Authorization required to access this endpoint.
+        3. PUT request with <int:pk> i.e. loan ID as a URL parameter and new loan details in the body can be used to edit a loan.
+        4. If loan is already approved, then edit is not allowed.
+    4. **List Loans of all customers to Admins and Agents : /loan/list-loans-admin-agent/**
+        1. This endpoint can be used by agents and admin users to list all loans in the system.
+        2. Customer role cannot access this endpoint.
+        3. Authorization required to access this endpoint.
+        4. GET request has to be sent to this endpoint.
+        5. Filters available:
+            1. status?=NEW
+            2. status?=APPROVED
+            3. status?=REJECTED
+        6. For example:
+            1. For only one of the filters use: http://localhost:8000/api/loan/list-loans-admin-agent?status=APPROVED
+    5. **List Loans of a particular Customer : /loan/list-loans-customer/**
+        1. This endpoint can be used by customers to list their loans in the system.
+        2. Authorization required to access this endpoint.
+        3. GET request has to be sent to this endpoint.
+        4. Filters available:
+            1. status?=NEW
+            2. status?=APPROVED
+            3. status?=REJECTED
+        5. For example:
+            1. For only one of the filters use: http://localhost:8000/api/loan/list-loans-admin-agent?status=APPROVED
