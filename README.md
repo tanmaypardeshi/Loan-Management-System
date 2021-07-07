@@ -58,6 +58,19 @@ docker-compose run --rm apis python manage.py test
 docker-compose run --rm apis python manage.py createsuperuser
 ```
 
+#### Key Points of the API:
+1. There are 3 roles in the system - Customer, Agent, Admin.
+2. Admins are the highest role available in the system and they can access the admin panel at http://127.0.0.1:8000/admin/ to view all data.
+3. PBKDF2 algorithm with a SHA256 hash is used for hashing the password before storing it in the database.
+4. [permissions.py](./backend/user/permissions.py) is used to set permissions of the user.
+5. JWT is used to perform token authentication and the token is only valid for 2 hours after it's creation. This is to increase security of the system.
+6. After 2 hours, a new token needs to be requested from the server.
+7. Every API call is protected by permissions and authentication to ensure maximum safety.
+8. History for "double safety" is being logged at every change made to a loan object. This can help us to rollback in extreme cases. Here is an example,
+![History of Loan Object](./screenshots/history.png)
+9. Filter by loan type is present.
+10. Indian Standard Timezone is considered in the system and date handling is done accordingly.
+
 #### Description of API endpoints:
 
 #### NOTE: Please check Postman Published Docs link given above to see examples of all API endpoints.
