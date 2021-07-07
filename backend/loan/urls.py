@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import CustomerRequestLoanView, ApproveOrRejectLoanView, EditLoanView, ListAdminAgentLoanView, ListCustomerLoanView
+from .views import CustomerRequestLoanView, ApproveOrRejectLoanView, EditLoanView, ListAdminAgentLoanView, \
+                   ListCustomerLoanView
 
 urlpatterns = [
     path('customer-loan/', CustomerRequestLoanView.as_view(), name='customer-loan'),

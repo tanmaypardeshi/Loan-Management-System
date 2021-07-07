@@ -18,9 +18,15 @@ class AgentRequestSerializer(ModelSerializer):
 
 
 class ListLoanSerializer(ModelSerializer):
+    email = serializers.CharField(source='user.email', read_only=True)
+    granted_by = serializers.CharField(source='granted_by.email', read_only=True)
+    first_name = serializers.CharField(source='user.first_name', read_only=True)
+    last_name = serializers.CharField(source='user.last_name', read_only=True)
+
     class Meta:
         model = Loan
-        fields = '__all__'
+        fields = ['id', 'email', 'first_name', 'last_name', 'granted_by', 'principal', 'interest', 'months', 'amount',
+                  'emi', 'status', 'start_date', 'end_date', 'modified_date']
 
 
 class ApproveOrRejectLoanSerializer(Serializer):

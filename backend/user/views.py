@@ -45,7 +45,7 @@ class UserView(APIView):
         return Response(response, status=status.HTTP_201_CREATED)
 
 
-class CreateAdmin(APIView):
+class CreateAdminView(APIView):
     permission_classes = (IsAuthenticated, IsAdmin,)
     authentication_classes = (JSONWebTokenAuthentication,)
 
@@ -84,7 +84,7 @@ class LoginView(APIView):
         except ValidationError as e:
             response = {
                 'success': False,
-                'message': f'Internal Server Error. Error : {e.__dict__["detail"]["non_field_errors"][0]}'
+                'message': f'Internal Server Error'
             }
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
@@ -96,10 +96,6 @@ class ProfileView(APIView):
     def get(self, request):
         try:
             user = User.objects.get(email=request.user)
-            last_login = str(user.last_login + datetime.timedelta(hours=5.5))
-            date_joined = str(user.date_joined + datetime.timedelta(hours=5.5))
-            last_login = f"{last_login[:10]} {last_login[11:19]}"
-            date_joined = f"{date_joined[:10]} {date_joined[11:19]}"
             response = {
                 'success': True,
                 'message': 'Profile fetched',
@@ -109,8 +105,8 @@ class ProfileView(APIView):
                 'is_customer': user.is_customer,
                 'is_agent': user.is_agent,
                 'is_admin': user.is_admin,
-                'last_login': last_login,
-                'date_joined': date_joined
+                'last_login': user.last_login,
+                'date_joined': user.date_joined
             }
             return Response(response, status=status.HTTP_200_OK)
         except Exception as e:

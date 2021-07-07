@@ -1,9 +1,10 @@
 from django.urls import path
-from .views import UserView, LoginView, ProfileView, ListAdminUserView, ListAgentUserView, CreateAdmin, ListApprovalsView, ApproveDeleteAgentView
+from .views import UserView, LoginView, ProfileView, ListAdminUserView, ListAgentUserView, CreateAdminView, \
+                    ListApprovalsView, ApproveDeleteAgentView
 
 urlpatterns = [
     path('signup/', UserView.as_view(), name='signup'),
-    path('create-admin/', CreateAdmin.as_view(), name='create-admin'),
+    path('create-admin/', CreateAdminView.as_view(), name='create-admin'),
     path('login/', LoginView.as_view(), name='login'),
     path('profile/', ProfileView.as_view(), name='profile'),
     path('list-agent/', ListAgentUserView.as_view(), name='list-agent'),
