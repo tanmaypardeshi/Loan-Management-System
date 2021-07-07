@@ -16,6 +16,8 @@
 4. [docker-compose.yml](docker-compose.yml) : YAML file configure the back end, and the database service.
 5. [user](./backend/user) : App for user authentication and user roles and permissions.
 6. [loan](./backend/loan) : App for the loan management of the users.
+7. User test cases present at [tests](./backend/user/tests)
+7. Loan test cases present at [tests](./backend/loan/tests)
 
 ### Steps to run the projects:
 

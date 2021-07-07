@@ -46,6 +46,7 @@ class EditLoanSerializer(Serializer):
     emi = serializers.FloatField(default=0)
     start_date = serializers.DateTimeField()
     end_date = serializers.DateTimeField()
+    status = serializers.CharField(max_length=12)
 
     def update(self, instance, validated_data):
         instance.principal = validated_data.get('principal', instance.principal)
@@ -55,5 +56,6 @@ class EditLoanSerializer(Serializer):
         instance.emi = validated_data.get('emi', instance.emi)
         instance.start_date = validated_data.get('start_date', instance.start_date)
         instance.end_date = validated_data.get('end_date', instance.end_date)
+        instance.status = validated_data.get('status', instance.status)
         instance.save()
         return instance
